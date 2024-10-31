@@ -1,0 +1,177 @@
+/* Importar tipografía Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    background-color: #f5f5f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto; /* Permitir deslizamiento vertical */
+}
+
+header {
+    background-color: #3f51b5;
+    color: #fff;
+    padding: 15px;
+}
+
+header h1 {
+    margin: 0;
+    font-weight: 500;
+    font-size: 1.5em;
+}
+
+#map {
+    width: 80%;
+    height: 350px;
+    margin: 20px auto;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.details-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 80%;
+    margin: 20px auto;
+    gap: 20px;
+}
+
+#markerDetails {
+    text-align: left;
+    width: 60%;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#markerDetails h3 {
+    font-weight: 500;
+    color: #3f51b5;
+    font-size: 1.2em;
+}
+
+#markerDetails label {
+    display: block;
+    margin-top: 8px;
+    font-weight: 500;
+    font-size: 0.9em;
+}
+
+#markerDetails input[type="text"],
+#markerDetails input[type="datetime-local"],
+#markerDetails select,
+#markerDetails textarea {
+    width: 100%;
+    padding: 6px;
+    margin-top: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+#markerDetails textarea {
+    height: 60px;
+    resize: vertical;
+}
+
+/* Estilo del selector "Selecciona el tipo de zona" */
+label[for="markerType"] {
+    font-weight: 500;
+    color: #333;
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+#markerType {
+    padding: 6px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    width: auto; /* Hacer el selector más compacto */
+}
+
+/* Estilo de los botones */
+#botonAgregar,
+#botonModificar,
+#botonEliminar,
+.delete-all-button {
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#botonAgregar:hover,
+#botonModificar:hover,
+#botonEliminar:hover,
+.delete-all-button:hover {
+    background-color: #303f9f;
+}
+
+#botonModificar,
+#botonEliminar {
+    background-color: #ff9800;
+}
+
+#botonModificar:hover,
+#botonEliminar:hover {
+    background-color: #e68900;
+}
+
+.delete-all-button {
+    background-color: #f44336;
+}
+
+.delete-all-button:hover {
+    background-color: #d32f2f;
+}
+
+/* Leyenda */
+.legend {
+    width: 30%;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.legend h3 {
+    font-weight: 500;
+    color: #3f51b5;
+    font-size: 1.1em;
+    margin-top: 0;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 0.9em;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.legend-color.red { background-color: #f44336; }
+.legend-color.green { background-color: #4caf50; }
+.legend-color.orange { background-color: #ff9800; }
+.legend-color.blue { background-color: #2196f3; }

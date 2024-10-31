@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Colaborativo de Zonas Afectadas</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <!-- Firebase SDKs (versión 8) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDVXUziSg8jBC-u9lSBAkc0tlYcWuxIABw",
+            authDomain: "mapacolaborativovalencia.firebaseapp.com",
+            projectId: "mapacolaborativovalencia",
+            storageBucket: "mapacolaborativovalencia.appspot.com",
+            messagingSenderId: "958007588329",
+            appId: "1:958007588329:web:76e62c803cec6e7c7e8778"
+        };
+
+        // Inicializar Firebase y Firestore
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
+</head>
+<body onload="inicializarFormulario()">
+    <header>
+        <h1>Mapa Colaborativo de Zonas Afectadas</h1>
+        <p>Visualiza y reporta zonas afectadas, puntos seguros y grupos de voluntarios en tiempo real.</p>
+    </header>
+    <div id="map"></div>
+    
+    <!-- Selector de tipo de marcador -->
+    <label for="markerType">Selecciona el tipo de zona:</label>
+    <select id="markerType" onchange="mostrarFormulario()">
+        <option value="Zona Afectada">Zona Afectada</option>
+        <option value="Punto de Ayuda">Punto de Ayuda</option>
+        <option value="Desaparecidos" selected>Desaparecidos</option>
+        <option value="Grupo de Voluntarios">Grupo de Voluntarios</option>
+    </select>
+
+    <!-- Contenedor para los detalles del punto y la leyenda -->
+    <div class="details-container">
+        <div id="markerDetails">
+            <h3>Detalles del Punto</h3>
+
+            <!-- Campos para Zona Afectada -->
+            <div id="zonaAfectadaFields" style="display: none;">
+                <label>Dirección Exacta:</label>
+                <input type="text" id="direccion" placeholder="Dirección exacta"><br>
+                <label>Comentarios:</label>
+                <textarea id="comentarios" placeholder="Escribe un comentario..."></textarea><br>
+            </div>
+
+            <!-- Campos específicos para Punto de Ayuda -->
+            <div id="puntoAyudaFields" style="display: none;">
+                <label>Dirección Exacta:</label>
+                <input type="text" id="direccionAyuda" placeholder="Dirección exacta del punto de ayuda"><br>
+                <label>Lo que se pide:</label>
+                <input type="text" id="necesidadesAyuda" placeholder="Ej. alimentos, ropa, agua"><br>
+                <label>Horario:</label>
+                <input type="text" id="horarioAyuda" placeholder="Horario de operación"><br>
+                <label>Comentarios:</label>
+                <textarea id="comentariosAyuda" placeholder="Información adicional..."></textarea><br>
+            </div>
+
+            <!-- Campos específicos para Desaparecidos -->
+            <div id="desaparecidosFields">
+                <label>Nombre y Apellidos:</label>
+                <input type="text" id="nombre" placeholder="Nombre completo"><br>
+                <label>Descripción Física:</label>
+                <input type="text" id="descripcion" placeholder="Descripción física"><br>
+                <label>Sexo:</label>
+                <select id="sexo">
+                    <option value="Hombre">Hombre</option>
+                    <option value="Mujer">Mujer</option>
+                </select><br>
+                <label>Comentarios:</label>
+                <textarea id="comentariosDesaparecido" placeholder="Escribe un comentario..."></textarea><br>
+            </div>
+
+            <!-- Campos específicos para Grupo de Voluntarios -->
+            <div id="grupoVoluntariosFields" style="display: none;">
+                <label>Ubicación:</label>
+                <input type="text" id="ubicacion" placeholder="Ubicación de la actividad"><br>
+                <label>Organización:</label>
+                <input type="text" id="organizacion" placeholder="Organización o grupo responsable"><br>
+                <label>Hora:</label>
+                <input type="datetime-local" id="hora"><br>
+                <label>Actividad:</label>
+                <input type="text" id="actividad" placeholder="Descripción de la actividad"><br>
+                <label>Comentarios (qué llevar):</label>
+                <textarea id="comentariosVoluntarios" placeholder="Especifica qué deben llevar los voluntarios..."></textarea><br>
+            </div>
+            <button id="botonAgregar" onclick="agregarReporte()">Añadir</button>
+            <button id="botonModificar" onclick="modificarReporte()" style="display: none;">Modificar</button>
+            <button id="botonEliminar" onclick="eliminarReporte()" style="display: none;">Eliminar</button>
+
+        </div>
+
+        <div class="legend">
+            <h3>Leyenda</h3>
+            <div class="legend-item">
+                <span class="legend-color red"></span> Zona Afectada
+            </div>
+            <div class="legend-item">
+                <span class="legend-color green"></span> Punto de Ayuda
+            </div>
+            <div class="legend-item">
+                <span class="legend-color orange"></span> Desaparecidos
+            </div>
+            <div class="legend-item">
+                <span class="legend-color blue"></span> Grupo de Voluntarios
+            </div>
+            <button class="delete-all-button" onclick="eliminarTodosLosPuntos()">Eliminar Todos los Puntos</button>
+        </div>
+    </div>
+
+    <!-- Leaflet JS para el mapa -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Archivo de configuración de Leaflet y lógica de la aplicación -->
+    <script src="app.js"></script>
+    <script>
+        function mostrarFormulario() {
+            const tipo = document.getElementById("markerType").value;
+            document.getElementById("zonaAfectadaFields").style.display = tipo === "Zona Afectada" ? "block" : "none";
+            document.getElementById("puntoAyudaFields").style.display = tipo === "Punto de Ayuda" ? "block" : "none";
+            document.getElementById("desaparecidosFields").style.display = tipo === "Desaparecidos" ? "block" : "none";
+            document.getElementById("grupoVoluntariosFields").style.display = tipo === "Grupo de Voluntarios" ? "block" : "none";
+            document.getElementById("markerDetails").style.display = "block";
+        }
+
+        function inicializarFormulario() {
+            document.getElementById("markerType").value = "Desaparecidos";
+            mostrarFormulario();
+        }
+    </script>
+</body>
+</html>
